@@ -1,4 +1,8 @@
 <?php
+// =========================================================================
+// PART 1: DEFINISI KELAS ANAK (TiketVelvet)
+// =========================================================================
+
 // Memanggil file abstract class induk
 require_once 'Tiket.php';
 
@@ -23,13 +27,13 @@ class TiketVelvet extends Tiket {
     // --- IMPLEMENTASI ABSTRACT METHODS (Wajib di-override) ---
 
     /**
-     * Menghitung total harga tiket untuk kelas Velvet.
-     * Terdapat tambahan biaya pelayanan premium Velvet Suite sebesar Rp 50.000 flat per transaksi.
+     * Polimorfisme Overriding: Menghitung total harga tiket untuk kelas Velvet.
+     * Sesuai Aturan Tahap 5: Total Harga = (jumlah_kursi * hargaDasarTiket) * 1.50
      * @return float|int
      */
     public function hitungTotalHarga() {
-        $biayaSurchargeLuxury = 50000;
-        return ($this->hargaDasarTiket * $this->jumlah_kursi) + $biayaSurchargeLuxury;
+        // Surcharge kelas premium sebesar 50% dari total harga dasar (dikali 1.50)
+        return ($this->jumlah_kursi * $this->hargaDasarTiket) * 1.50;
     }
 
     /**
@@ -40,10 +44,12 @@ class TiketVelvet extends Tiket {
         echo "ID Tiket        : " . $this->id_tiket . "<br>";
         echo "Film            : " . $this->nama_film . "<br>";
         echo "Kursi Dipesan   : " . $this->jumlah_kursi . " Sofa Bed<br>";
-        echo "Fasilitas Kenyamanan: " . ($this->bantalSelimutPack ?? "Standar Pack") . "<br>";
-        echo "Layanan Eksklusif  : " . ($this->layananButler ?? "On-Call Service") . "<br>";
-        echo "Total Harga (+ include Luxury Service Charge): Rp " . number_format($this->hitungTotalHarga(), 0, ',', '.') . "<br>";
+        echo "Harga Dasar/Pcs : Rp " . number_format($this->hargaDasarTiket, 0, ',', '.') . "<br>";
+        echo "Fasilitas Paket : " . ($this->bantalSelimutPack ?? "Standar Pack") . "<br>";
+        echo "Layanan Butler  : " . ($this->layananButler ?? "On-Call Service") . "<br>";
         echo "-------------------------------------------<br>";
+        echo "Total Harga (+ Surcharge Premium 50%): Rp " . number_format($this->hitungTotalHarga(), 0, ',', '.') . "<br>";
+        echo "===========================================<br>";
     }
 
     // --- GETTER & SETTER SPESIFIK ---
@@ -53,3 +59,32 @@ class TiketVelvet extends Tiket {
     public function getLayananButler() { return $this->layananButler; }
     public function setLayananButler($layananButler) { $this->layananButler = $layananButler; }
 }
+
+
+// =========================================================================
+// PART 2: PROSES HITUNG-HITUNGAN & SIMULASI OBJEK
+// =========================================================================
+
+// 1. Menentukan Data Input
+$id_tiket          = "TKT-VLV-003";
+$nama_film         = "Avengers: Secret Wars";
+$jadwal_tayang     = "2026-06-20 19:00:00";
+$jumlah_kursi      = 2;          // Contoh beli 2 Sofa Bed
+$hargaDasarTiket   = 80000;      // Contoh harga dasar Velvet Rp 80.000 per kursi
+$bantalSelimutPack = "Gold Pack Premium";
+$layananButler     = "VIP Personal Butler";
+
+// 2. Instansiasi Objek TiketVelvet
+$pesananVelvet = new TiketVelvet(
+    $id_tiket, 
+    $nama_film, 
+    $jadwal_tayang, 
+    $jumlah_kursi, 
+    $hargaDasarTiket, 
+    $bantalSelimutPack, 
+    $layananButler
+);
+
+// 3. Eksekusi Program & Tampilkan Output Perhitungan ke Browser
+$pesananVelvet->tampilkanInfoFasilitas();
+?>
