@@ -1,4 +1,8 @@
 <?php
+// =========================================================================
+// PART 1: DEFINISI KELAS ANAK (TiketRegular)
+// =========================================================================
+
 // Memanggil file abstract class induk
 require_once 'Tiket.php';
 
@@ -23,12 +27,12 @@ class TiketRegular extends Tiket {
     // --- IMPLEMENTASI ABSTRACT METHODS (Wajib diisi karena kelas anak konkrit) ---
 
     /**
-     * Menghitung total harga tiket untuk kelas Regular.
-     * Pada kelas regular, biasanya tidak ada biaya tambahan studio.
+     * Polimorfisme Overriding: Menghitung total harga tiket kelas Regular.
+     * Sesuai Aturan Tahap 5: Total Harga = jumlah_kursi * hargaDasarTiket
      * @return float|int
      */
     public function hitungTotalHarga() {
-        return $this->hargaDasarTiket * $this->jumlah_kursi;
+        return $this->jumlah_kursi * $this->hargaDasarTiket;
     }
 
     /**
@@ -36,13 +40,15 @@ class TiketRegular extends Tiket {
      */
     public function tampilkanInfoFasilitas() {
         echo "=== FASILITAS TIKET REGULAR ===<br>";
-        echo "ID Tiket      : " . $this->id_tiket . "<br>";
-        echo "Film          : " . $this->nama_film . "<br>";
-        echo "Kursi Dipesan : " . $this->jumlah_kursi . " Kursi<br>";
-        echo "Tipe Audio    : " . $this->tipeAudio . "<br>";
-        echo "Lokasi Baris  : " . $this->lokasiBaris . "<br>";
-        echo "Total Harga   : Rp " . number_format($this->hitungTotalHarga(), 0, ',', '.') . "<br>";
+        echo "ID Tiket        : " . $this->id_tiket . "<br>";
+        echo "Film            : " . $this->nama_film . "<br>";
+        echo "Kursi Dipesan   : " . $this->jumlah_kursi . " Kursi<br>";
+        echo "Harga Dasar/Pcs : Rp " . number_format($this->hargaDasarTiket, 0, ',', '.') . "<br>";
+        echo "Tipe Audio      : " . $this->tipeAudio . "<br>";
+        echo "Lokasi Baris    : " . $this->lokasiBaris . "<br>";
         echo "---------------------------------<br>";
+        echo "Total Harga     : Rp " . number_format($this->hitungTotalHarga(), 0, ',', '.') . "<br>";
+        echo "=================================<br>";
     }
 
     // --- GETTER & SETTER SPESIFIK ---
@@ -52,3 +58,32 @@ class TiketRegular extends Tiket {
     public function getLokasiBaris() { return $this->lokasiBaris; }
     public function setLokasiBaris($lokasiBaris) { $this->lokasiBaris = $lokasiBaris; }
 }
+
+
+// =========================================================================
+// PART 2: PROSES HITUNG-HITUNGAN & SIMULASI OBJEK
+// =========================================================================
+
+// 1. Menentukan Data Input
+$id_tiket          = "TKT-REG-002";
+$nama_film         = "Avengers: Secret Wars";
+$jadwal_tayang     = "2026-06-20 19:00:00";
+$jumlah_kursi      = 3;          // Contoh beli 3 kursi
+$hargaDasarTiket   = 50000;      // Contoh harga dasar Rp 50.000 per kursi
+$tipeAudio         = "Dolby Atmos";
+$lokasiBaris       = "Row H (Tengah)";
+
+// 2. Instansiasi Objek TiketRegular
+$pesananRegular = new TiketRegular(
+    $id_tiket, 
+    $nama_film, 
+    $jadwal_tayang, 
+    $jumlah_kursi, 
+    $hargaDasarTiket, 
+    $tipeAudio, 
+    $lokasiBaris
+);
+
+// 3. Eksekusi Program & Tampilkan Output Perhitungan ke Layar/Browser
+$pesananRegular->tampilkanInfoFasilitas();
+?>
